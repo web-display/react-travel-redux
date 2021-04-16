@@ -10,12 +10,17 @@ import {
 	useRouteMatch,
 	Link,
 } from 'react-router-dom'
+import { useSelector } from '../../redux/hooks'
+import { useDispatch } from 'react-redux'
 
 export const Header: React.FC = () => {
 	const history = useHistory() //导航操作
 	const location = useLocation() //当前路径的信息
 	const params = useParams() //URL中参数
 	const match = useRouteMatch() //URL匹配的数据
+	const language = useSelector((state) => state.language)
+	const languageList = useSelector((state) => state.languageList)
+	const dispatch = useDispatch()
 	return (
 		<div className={styles['app-header']}>
 			<div className={styles['top-header']}>
