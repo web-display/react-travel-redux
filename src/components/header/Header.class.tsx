@@ -5,13 +5,17 @@ import { Layout, Typography, Input, Menu, Button, Dropdown } from 'antd'
 import { GlobalOutlined } from '@ant-design/icons'
 import { withRouter, RouteComponentProps, Link } from 'react-router-dom'
 import store from '../../redux/store'
-import { LanguageState } from '../../redux/languageReducer'
-import { withTranslation, WithTranslation } from 'react-i18next' //1
+import { LanguageState } from '../../redux/language/languageReducer'
+import { withTranslation, WithTranslation } from 'react-i18next'
+import {
+	changeLanguageActionCreator,
+	addLanguageActionCreator,
+} from '../../redux/language/languageActions'
 
 interface State extends LanguageState {}
 
 class HeaderComponent extends React.Component<
-	RouteComponentProps & WithTranslation, //2
+	RouteComponentProps & WithTranslation,
 	State
 > {
 	constructor(props) {
@@ -32,24 +36,15 @@ class HeaderComponent extends React.Component<
 	}
 	menuClickHandler = (e) => {
 		if (e.key === 'new') {
-			const action = {
-				type: 'add_language',
-				payload: {
-					code: 'new_lang',
-					name: '新语言',
-				},
-			}
+			const action = addLanguageActionCreator('新语言', 'newlang')
 			store.dispatch(action)
 		} else {
-			const action = {
-				type: 'change_language',
-				payload: e.key,
-			}
+			const action = changeLanguageActionCreator(e.key)
 			store.dispatch(action)
 		}
 	}
 	render() {
-		const { history, t } = this.props //3
+		const { history, t } = this.props
 		return (
 			<div className={styles['app-header']}>
 				<div className={styles['top-header']}>
