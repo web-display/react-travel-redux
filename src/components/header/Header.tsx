@@ -5,9 +5,9 @@ import { Layout, Typography, Input, Menu, Button, Dropdown } from 'antd'
 import { GlobalOutlined } from '@ant-design/icons'
 import {
 	useHistory,
-	useLocation,
-	useParams,
-	useRouteMatch,
+	// useLocation,
+	// useParams,
+	// useRouteMatch,
 	Link,
 } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
@@ -20,11 +20,11 @@ import { useTranslation } from 'react-i18next'
 
 export const Header: React.FC = () => {
 	const history = useHistory() //导航操作
-	const location = useLocation() //当前路径的信息
-	const params = useParams() //URL中参数
-	const match = useRouteMatch() //URL匹配的数据
-	const language = useSelector((state) => state.language)
-	const languageList = useSelector((state) => state.languageList)
+	// const location = useLocation() //当前路径的信息
+	// const params = useParams() //URL中参数
+	// const match = useRouteMatch() //URL匹配的数据
+	const language = useSelector((state) => state.language.language)
+	const languageList = useSelector((state) => state.language.languageList)
 	const dispatch = useDispatch()
 	const { t } = useTranslation()
 	const menuClickHandler = (e) => {

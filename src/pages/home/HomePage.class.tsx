@@ -14,37 +14,56 @@ import { productList1, productList2, productList3 } from './mockups'
 import styles from './HomePage.module.css'
 import { withTranslation, WithTranslation } from 'react-i18next'
 import axios from 'axios'
+import { connect } from 'react-redux'
+import { RootState } from '../../redux/store'
+import {
+	fetchRecommendProductStartActionCreator,
+	fetchRecommendProductSuccessActionCreator,
+	fetchRecommendProductFailActionCreator,
+} from '../../redux/recommendProducts/recommendProductsActions'
 
-interface State {
-	loading: boolean
-	error: string | null
-	productList: any[]
+const mapStateToProps = (state: RootState) => {
+	return {
+		loading: state.recommendProducts.loading,
+		error: state.recommendProducts.error,
+		productList: state.recommendProducts.productList,
+	}
 }
 
-class HomePageComponent extends React.Component<WithTranslation, State> {
-	constructor(props) {
-		super(props)
-		this.state = {
-			loading: true,
-			error: null,
-			productList: [],
-		}
+const mapDispatchToProps = (dispatch) => {
+	return {
+		fetchStart: () => {
+			dispatch(fetchRecommendProductStartActionCreator())
+		},
+		fetchSuccess: (data) => {
+			dispatch(fetchRecommendProductSuccessActionCreator(data))
+		},
+		fetchFail: (error) => {
+			dispatch(fetchRecommendProductFailActionCreator(error))
+		},
 	}
+}
+
+type PropsType = WithTranslation &
+	ReturnType<typeof mapStateToProps> &
+	ReturnType<typeof mapDispatchToProps>
+
+class HomePageComponent extends React.Component<PropsType> {
 	async componentDidMount() {
+		this.props.fetchStart()
 		try {
 			const { data } = await axios.get(
 				'https://jsonplaceholder.cypress.io/posts',
 			)
 			const dataList = data.splice(0, 9)
-			this.setState({ productList: dataList, loading: false, error: null })
+			this.props.fetchSuccess(dataList)
 		} catch (error) {
-			this.setState({ error: error, loading: false })
+			this.props.fetchFail(error.message)
 		}
 	}
 
 	render() {
-		const { t } = this.props
-		const { error, loading } = this.state
+		const { t, loading, error } = this.props
 		if (loading) {
 			return (
 				<Spin
@@ -108,4 +127,7 @@ class HomePageComponent extends React.Component<WithTranslation, State> {
 		)
 	}
 }
-export const HomePage = withTranslation()(HomePageComponent)
+export const HomePage = connect(
+	mapStateToProps,
+	mapDispatchToProps,
+)(withTranslation()(HomePageComponent))
