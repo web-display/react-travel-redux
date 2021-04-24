@@ -13,14 +13,9 @@ import sideImage3 from '../../assets/images/sider_2019_02-04-2.png'
 import { productList1, productList2, productList3 } from './mockups'
 import styles from './HomePage.module.css'
 import { withTranslation, WithTranslation } from 'react-i18next'
-import axios from 'axios'
 import { connect } from 'react-redux'
 import { RootState } from '../../redux/store'
-import {
-	fetchRecommendProductStartActionCreator,
-	fetchRecommendProductSuccessActionCreator,
-	fetchRecommendProductFailActionCreator,
-} from '../../redux/recommendProducts/recommendProductsActions'
+import { giveMeDataActionCreator } from '../../redux/recommendProducts/recommendProductsActions'
 
 const mapStateToProps = (state: RootState) => {
 	return {
@@ -32,14 +27,8 @@ const mapStateToProps = (state: RootState) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		fetchStart: () => {
-			dispatch(fetchRecommendProductStartActionCreator())
-		},
-		fetchSuccess: (data) => {
-			dispatch(fetchRecommendProductSuccessActionCreator(data))
-		},
-		fetchFail: (error) => {
-			dispatch(fetchRecommendProductFailActionCreator(error))
+		giveMeData: () => {
+			dispatch(giveMeDataActionCreator())
 		},
 	}
 }
@@ -49,17 +38,8 @@ type PropsType = WithTranslation &
 	ReturnType<typeof mapDispatchToProps>
 
 class HomePageComponent extends React.Component<PropsType> {
-	async componentDidMount() {
-		this.props.fetchStart()
-		try {
-			const { data } = await axios.get(
-				'https://jsonplaceholder.cypress.io/posts',
-			)
-			const dataList = data.splice(0, 9)
-			this.props.fetchSuccess(dataList)
-		} catch (error) {
-			this.props.fetchFail(error.message)
-		}
+	componentDidMount() {
+		this.props.giveMeData()
 	}
 
 	render() {
