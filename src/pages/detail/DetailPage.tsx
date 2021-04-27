@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react'
-import { RouteComponentProps, useParams } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { RouteComponentProps } from 'react-router-dom'
 import axios from 'axios'
 import { Spin, Row, Col } from 'antd'
 import styles from './DetailPage.module.css'
 import { Header, Footer, ProductIntro } from '../../components'
-import { DatePicker, Space } from 'antd'
+import { DatePicker } from 'antd'
+import { productDetailSlice } from '../../redux/productDetail/slice'
+import { useSelector } from '../../redux/hooks'
+import { useDispatch } from 'react-redux'
 
 const { RangePicker } = DatePicker
 
@@ -14,23 +17,22 @@ interface MatchParams {
 
 export const DetailPage: React.FC<RouteComponentProps<MatchParams>> = () => {
 	// const { touristRouteId } = useParams<MatchParams>()
-	const [loading, setLoading] = useState<boolean>(true)
-	const [product, setProduct] = useState<any>(null)
-	const [error, setError] = useState<string | null>(null)
+	const loading = useSelector((state) => state.productDetail.loading)
+	const error = useSelector((state) => state.productDetail.error)
+	const product = useSelector((state) => state.productDetail.data)
+
+	const dispatch = useDispatch()
 
 	useEffect(() => {
 		const fetchData = async () => {
-			setLoading(true)
+			dispatch(productDetailSlice.actions.fetchStart())
 			try {
 				const { data } = await axios.get(
-					// `http://123.56.149.216:8080/api/touristRoutes/${touristRouteId}`,
-					'https://run.mocky.io/v3/5a108ca7-4c5f-4141-964b-e8200a57e40a',
+					`https://run.mocky.io/v3/5a108ca7-4c5f-4141-964b-e8200a57e40a`,
 				)
-				setProduct(data)
-				setLoading(false)
+				dispatch(productDetailSlice.actions.fetchSuccess(data))
 			} catch (error) {
-				setError(error.message)
-				setLoading(false)
+				dispatch(productDetailSlice.actions.fetchFail(error.message))
 			}
 		}
 		fetchData()
