@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
-import axios from 'axios'
 import { Spin, Row, Col } from 'antd'
 import styles from './DetailPage.module.css'
 import { Header, Footer, ProductIntro } from '../../components'
 import { DatePicker } from 'antd'
-import { productDetailSlice } from '../../redux/productDetail/slice'
+import { getProductDetail } from '../../redux/productDetail/slice'
 import { useSelector } from '../../redux/hooks'
 import { useDispatch } from 'react-redux'
 
@@ -24,18 +23,7 @@ export const DetailPage: React.FC<RouteComponentProps<MatchParams>> = () => {
 	const dispatch = useDispatch()
 
 	useEffect(() => {
-		const fetchData = async () => {
-			dispatch(productDetailSlice.actions.fetchStart())
-			try {
-				const { data } = await axios.get(
-					`https://run.mocky.io/v3/5a108ca7-4c5f-4141-964b-e8200a57e40a`,
-				)
-				dispatch(productDetailSlice.actions.fetchSuccess(data))
-			} catch (error) {
-				dispatch(productDetailSlice.actions.fetchFail(error.message))
-			}
-		}
-		fetchData()
+		dispatch(getProductDetail('1'))
 	}, [])
 	if (loading) {
 		return (

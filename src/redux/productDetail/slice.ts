@@ -1,4 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit'
+import axios from 'axios'
+
 interface ProductDetailState {
 	loading: boolean
 	error: string | null
@@ -9,20 +11,35 @@ const initialState: ProductDetailState = {
 	error: null,
 	data: null,
 }
+
+export const getProductDetail = createAsyncThunk(
+	'productDetail/getProductDetail',
+	async (touristRouteId: string, thunkAPI) => {
+		const { data } = await axios.get(
+			`https://run.mocky.io/v3/5a108ca7-4c5f-4141-964b-e8200a57e40a`,
+		)
+		return data
+	},
+)
+
 export const productDetailSlice = createSlice({
 	name: 'productDetail',
 	initialState,
-	reducers: {
-		fetchStart: (state) => {
+	reducers: {},
+	extraReducers: {
+		[getProductDetail.pending.type]: (state) => {
 			// return { ...state, loading: true };
 			state.loading = true
 		},
-		fetchSuccess: (state, action) => {
+		[getProductDetail.fulfilled.type]: (state, action) => {
 			state.data = action.payload
 			state.loading = false
 			state.error = null
 		},
-		fetchFail: (state, action: PayloadAction<string | null>) => {
+		[getProductDetail.rejected.type]: (
+			state,
+			action: PayloadAction<string | null>,
+		) => {
 			//   const ddd = action.payload;
 			state.loading = false
 			state.error = action.payload
