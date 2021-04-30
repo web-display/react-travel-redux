@@ -7,9 +7,24 @@ import {
 	RegisterPage,
 	SearchPage,
 	SignInPage,
+	ShoppingCartPage,
 } from './pages'
+import { Redirect } from 'react-router-dom'
+import { useSelector } from './redux/hooks'
+
+const PrivateRoute = ({ component, isAuthenticated, ...rest }) => {
+	const routeComponent = (props) => {
+		return isAuthenticated ? (
+			React.createElement(component, props)
+		) : (
+			<Redirect to={{ pathname: '/signIn' }} />
+		)
+	}
+	return <Route render={routeComponent} {...rest} />
+}
 
 function App() {
+	const jwt = useSelector((s) => s.user.token)
 	return (
 		<div className={styles.App}>
 			<BrowserRouter>
@@ -19,6 +34,11 @@ function App() {
 					<Route path="/register" component={RegisterPage} />
 					<Route path="/detail/:touristRouteId" component={DetailPage} />
 					<Route path="/search/:keywords?" component={SearchPage} />
+					<PrivateRoute
+						isAuthenticated={jwt !== null}
+						path="/shoppingCart"
+						component={ShoppingCartPage}
+					/>
 					<Route render={() => <h1>404 not found</h1>} />
 				</Switch>
 			</BrowserRouter>
