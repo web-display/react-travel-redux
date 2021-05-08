@@ -16,7 +16,7 @@ export const getProductDetail = createAsyncThunk(
 	'productDetail/getProductDetail',
 	async (touristRouteId: string, thunkAPI) => {
 		const { data } = await axios.get(
-			`https://run.mocky.io/v3/5a108ca7-4c5f-4141-964b-e8200a57e40a`,
+			`https://run.mocky.io/v3/5832b9ac-0c54-493b-9ba8-368323af9e1a`,
 		)
 		return data
 	},

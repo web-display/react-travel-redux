@@ -64,7 +64,7 @@ export const ProductIntro: React.FC<PropsType> = ({
 			),
 		},
 		{
-			key: 2,
+			key: 3,
 			title: '限时抢购折扣',
 			description: discount ? (
 				<>
@@ -78,12 +78,12 @@ export const ProductIntro: React.FC<PropsType> = ({
 			),
 		},
 		{
-			key: 2,
+			key: 4,
 			title: '领取优惠',
 			description: coupons ? discount : '无优惠券可领',
 		},
 		{
-			key: 2,
+			key: 5,
 			title: '线路评价',
 			description: (
 				<>
@@ -111,8 +111,8 @@ export const ProductIntro: React.FC<PropsType> = ({
 				</Typography.Text>
 			</div>
 			<Carousel autoplay slidesToShow={3}>
-				{pictures.map((p) => (
-					<Image height={150} src={p} />
+				{pictures.map((p, i) => (
+					<Image height={150} key={i} src={p} />
 				))}
 			</Carousel>
 			<Table<RowType>
